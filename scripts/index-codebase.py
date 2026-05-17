@@ -284,7 +284,7 @@ def walk_files(root: Path) -> list[Path]:
     return sorted(result)
 
 
-def index_file(path: Path) -> dict:
+def index_file(path: Path) -> tuple[str, dict]:
     rel = str(path.relative_to(PROJECT_ROOT))
     h = file_hash(path)
     lang = "python" if path.suffix == ".py" else "typescript"
