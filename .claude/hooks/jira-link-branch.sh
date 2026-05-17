@@ -47,7 +47,7 @@ if m:
 BRANCH_URL="${REPO_HTTP}/tree/${BRANCH}"
 
 # ── Post comment on Jira issue (Jira REST API v2 — plain text / wiki markup) ─
-AUTH=$(printf '%s:%s' "$ATLASSIAN_EMAIL" "$ATLASSIAN_API_TOKEN" | base64 -w 0)
+AUTH="$ATLASSIAN_BASIC_AUTH"
 COMMENT_BODY="Branch created and linked via GitHub for Jira: [${BRANCH}|${BRANCH_URL}]"
 COMMENT_JSON=$(python3 -c "import json, sys; print(json.dumps({'body': sys.argv[1]}))" "$COMMENT_BODY")
 

@@ -38,7 +38,7 @@ if [ -z "$ISSUE_KEY" ]; then
   exit 0
 fi
 
-AUTH=$(printf '%s:%s' "$ATLASSIAN_EMAIL" "$ATLASSIAN_API_TOKEN" | base64 -w 0)
+AUTH="$ATLASSIAN_BASIC_AUTH"
 TRANSITIONS_URL="${ATLASSIAN_URL}/rest/api/3/issue/${ISSUE_KEY}/transitions"
 
 # Fetch available transitions

@@ -2,9 +2,7 @@
   "name": "python-typescript-dev",
   "private": true,
   "dependencies": {
-    "@modelcontextprotocol/server-github": "latest",
-    "jsdom": "^29.1.1",
-    "mcp-atlassian": "latest"
+    "jsdom": "^29.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
