@@ -296,6 +296,57 @@ def index_file(path: Path) -> tuple[str, dict]:
     }
 
 
+# ── Brief overview ───────────────────────────────────────────────────────────
+
+def brief_overview(data: dict) -> None:
+    files = data.get("files", {})
+    if not files:
+        print("Index is empty — run: python3 scripts/index-codebase.py --full")
+        return
+
+    lang_counts: dict[str, int] = {}
+    total_functions = 0
+    total_classes = 0
+    for entry in files.values():
+        lang = entry.get("language", "unknown")
+        lang_counts[lang] = lang_counts.get(lang, 0) + 1
+        for sym in entry.get("symbols", []):
+            if sym["kind"] == "function":
+                total_functions += 1
+            elif sym["kind"] == "class":
+                total_classes += 1
+                total_functions += len(sym.get("methods", []))
+
+    changed = []
+    for rel, entry in files.items():
+        p = PROJECT_ROOT / rel
+        if p.exists():
+            current = hashlib.sha256(p.read_bytes()).hexdigest()[:16]
+            if current != entry.get("hash", ""):
+                changed.append(rel)
+
+    generated = data.get("generated_at", "unknown")
+    lang_summary = "  ".join(f"{lang}: {n}" for lang, n in sorted(lang_counts.items()))
+    print(f"Codebase index  generated: {generated}")
+    print(f"Files: {len(files)}  |  {lang_summary}")
+    print(f"Symbols: {total_functions} functions/methods, {total_classes} classes")
+    print()
+    if changed:
+        print(f"Stale ({len(changed)} file(s) need re-index):")
+        for f in changed[:5]:
+            print(f"  {f}")
+        if len(changed) > 5:
+            print(f"  ... and {len(changed) - 5} more")
+    else:
+        print("Index is current — no stale files.")
+    print()
+    print("Top exports (up to 3 per file):")
+    for rel, entry in sorted(files.items())[:10]:
+        exports = entry.get("exports", [])[:3]
+        if exports:
+            print(f"  {rel}: {', '.join(exports)}")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def load_index() -> dict:
@@ -319,9 +370,14 @@ def main() -> None:
     parser.add_argument("--full", action="store_true", help="Force full re-index")
     parser.add_argument("--check", action="store_true", help="Print changed files, no write")
     parser.add_argument("--file", metavar="PATH", help="Re-index a single file")
+    parser.add_argument("--brief", action="store_true", help="Print compact project overview")
     args = parser.parse_args()
 
     data = load_index()
+
+    if args.brief:
+        brief_overview(data)
+        return
     existing = data.get("files", {})
     updated = 0
     removed = 0

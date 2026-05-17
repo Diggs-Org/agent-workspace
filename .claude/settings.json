@@ -19,6 +19,15 @@
             "command": "bash /workspaces/puzzle/.claude/hooks/lint-before-commit.sh"
           }
         ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/auto-reindex.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [

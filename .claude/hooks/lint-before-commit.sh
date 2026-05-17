@@ -59,6 +59,18 @@ if [ -f "package.json" ] && command -v node &>/dev/null; then
   fi
 fi
 
+# ── TypeScript: tsc --noEmit ──────────────────────────────────────────────────
+if [ -f "tsconfig.json" ] && [ -f "node_modules/.bin/tsc" ]; then
+  set +e
+  TSC_OUT=$(node_modules/.bin/tsc --noEmit 2>&1)
+  TSC_EXIT=$?
+  set -e
+  if [ $TSC_EXIT -ne 0 ]; then
+    HAS_ERRORS=true
+    REPORT="${REPORT}tsc --noEmit:\n${TSC_OUT}\n\n"
+  fi
+fi
+
 # ── Advisory output (never blocks) ───────────────────────────────────────────
 if [ "$HAS_ERRORS" = "true" ]; then
   CONTEXT=$(printf "Lint warnings (advisory — commit allowed):\n%b" "$REPORT")
