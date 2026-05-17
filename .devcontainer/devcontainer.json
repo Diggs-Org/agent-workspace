@@ -17,6 +17,7 @@
   "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
   "ATLASSIAN_EMAIL": "${localEnv:ATLASSIAN_EMAIL}",
   "ATLASSIAN_API_TOKEN": "${localEnv:ATLASSIAN_API_TOKEN}",
+  "ATLASSIAN_BASIC_AUTH": "${localEnv:ATLASSIAN_BASIC_AUTH}",
   "ATLASSIAN_URL": "${localEnv:ATLASSIAN_URL}"
 },
   "customizations": {
@@ -30,5 +31,5 @@
     }
   },
 
-  "postCreateCommand": "npm ci"
+  "postCreateCommand": "npm ci && pip install uv"
 }
