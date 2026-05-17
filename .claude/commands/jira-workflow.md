@@ -1,3 +1,68 @@
 # Jira Workflow
 
-@docs/jira-workflow.md
+## Environment Variables
+
+| Variable              | Value                           |
+| --------------------- | ------------------------------- |
+| `ATLASSIAN_URL`       | `https://ddiggs.atlassian.net`  |
+| `ATLASSIAN_EMAIL`     | `claude.danielsdiggs@gmail.com` |
+| `ATLASSIAN_API_TOKEN` | set in devcontainer             |
+| `GITHUB_TOKEN`        | set in devcontainer             |
+
+## Working a Ticket
+
+When asked to "work a ticket":
+
+1. **Get assigned tickets** — use the Atlassian MCP to list tickets assigned to `claude.danielsdiggs@gmail.com`
+2. **Pick the highest-priority unresolved ticket**
+3. **Create branch** via `mcp__github__create_branch` using the naming convention:
+   `PROJECT-123/short-description` (Jira key _must_ be the branch prefix)
+   - PostToolUse hooks auto-run: Jira → **In Progress**, comment + remote link posted to Jira issue
+4. **Submit a brief plan** — post a comment on the Jira ticket summarizing the implementation approach. Wait for approval from another team member before proceeding.
+5. **Implement changes**, committing as you go
+6. **Push commits** before creating the PR:
+   ```bash
+   git push origin <branch>
+   ```
+7. **Create PR** via `mcp__github__create_pull_request` using the structure from `.github/pull_request_template.md` as the PR body
+   - PostToolUse hooks auto-run: Jira → **In Review**, coverage report posted as PR comment
+8. **Read the PR** via `mcp__github__pull_request_read` when addressing review comments
+   - PostToolUse hook auto-fetches all inline review comments and PR comments into context
+9. After the user approves, **squash merge** via `mcp__github__merge_pull_request` using the PR title and body from the pull request template as the merge commit message
+   - PostToolUse hook auto-transitions Jira → **Done**
+
+> Branch naming is critical: hooks extract the Jira key using `[A-Z]+-[0-9]+`.
+> The branch must start with the Jira key (e.g. `PROJECT-123/...`).
+
+## Hooks Reference
+
+| Event        | Trigger                            | Script                           | Effect                                                  |
+| ------------ | ---------------------------------- | -------------------------------- | ------------------------------------------------------- |
+| PreToolUse   | `Bash` (`git commit`)              | `lint-before-commit.sh`          | Advisory ruff + eslint report                           |
+| PostToolUse  | `mcp__github__create_branch`       | `jira-transition.sh in_progress` | Jira → In Progress                                      |
+| PostToolUse  | `mcp__github__create_branch`       | `jira-link-branch.sh`            | Posts comment + remote link on Jira issue               |
+| PostToolUse  | `mcp__github__create_pull_request` | `jira-transition.sh in_review`   | Jira → In Review                                        |
+| PostToolUse  | `mcp__github__create_pull_request` | `post-pr-coverage.sh`            | Posts coverage report as PR comment                     |
+| PostToolUse  | `mcp__github__pull_request_read`   | `fetch-pr-comments.sh`           | Injects all PR comments into context                    |
+| PostToolUse  | `mcp__github__merge_pull_request`  | `jira-transition.sh done`        | Jira → Done                                             |
+| Stop         | session end                        | `session-summary.sh`             | Appends diff summary to `.claude/session-summaries.log` |
+| Notification | any                                | `notify.sh`                      | Desktop notify + `.claude/notifications.log`            |
+
+## Jira Development Panel (full integration)
+
+For branches, commits, and PRs to appear in Jira's native Development panel, install the **GitHub for Jira** app:
+
+> Jira Settings → Apps → Find new apps → search "GitHub for Jira"
+
+Once connected, any branch/commit/PR referencing a Jira issue key is automatically linked — no extra hook work needed for that panel.
+
+## Transition Troubleshooting
+
+If auto-transitions don't fire, verify transition names match your board's workflow:
+
+```bash
+curl -s -u "$ATLASSIAN_EMAIL:$ATLASSIAN_API_TOKEN" \
+  "$ATLASSIAN_URL/rest/api/3/issue/PROJECT-1/transitions" | python3 -m json.tool
+```
+
+Adjust the `PATTERN` strings in `.claude/hooks/jira-transition.sh`.

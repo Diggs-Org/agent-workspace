@@ -2,8 +2,6 @@
 
 ## Jira Workflow
 
-@docs/jira-workflow.md
-
 Use `/jira-workflow` for the full workflow reference.
 
 ## Codebase Navigation
