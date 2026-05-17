@@ -28,6 +28,11 @@ When asked to "work a ticket":
    - PostToolUse hooks auto-run: Jira → **In Review**, coverage report posted as PR comment
 8. **Read the PR** via `mcp__github__pull_request_read` when addressing review comments
    - PostToolUse hook auto-fetches all inline review comments and PR comments into context
+   - Make the requested changes, push them to the branch, then re-request a review from `@DDiggs91`:
+     ```bash
+     git push origin <branch>
+     gh pr edit <number> --add-reviewer DDiggs91
+     ```
 9. After the user approves, **squash merge** via `mcp__github__merge_pull_request` using the PR title and body from the pull request template as the merge commit message
    - PostToolUse hook auto-transitions Jira → **Done**
 
