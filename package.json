@@ -1,0 +1,13 @@
+{
+  "name": "python-typescript-dev",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/server-github": "latest",
+    "mcp-atlassian": "latest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}

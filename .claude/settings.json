@@ -1,0 +1,93 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(python3 *)",
+      "Bash(chmod +x .claude/hooks/*.sh)",
+      "Bash(curl -s*)",
+      "Bash(jq *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/lint-before-commit.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__github__create_branch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/jira-transition.sh in_progress"
+          },
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/jira-link-branch.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__github__create_pull_request",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/jira-transition.sh in_review"
+          },
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/post-pr-coverage.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__github__merge_pull_request",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/jira-transition.sh done"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__github__pull_request_read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/fetch-pr-comments.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/session-summary.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /workspaces/puzzle/.claude/hooks/notify.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

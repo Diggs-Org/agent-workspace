@@ -1,2 +1,3 @@
-# puzzle
-Cryptography puzzle service
+# Claude Template
+
+A basic template to use for python and Typescript projects
