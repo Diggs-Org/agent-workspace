@@ -18,12 +18,22 @@ When asked to "work a ticket":
 3. **Create branch** via `mcp__github__create_branch` using the naming convention:
    `PROJECT-123/short-description` (Jira key _must_ be the branch prefix)
    - PostToolUse hooks auto-run: Jira → **In Progress**, comment + remote link posted to Jira issue
-4. **Implement changes**, committing as you go
-5. **Create PR** via `mcp__github__create_pull_request`
+4. **Submit a brief plan** — post a comment on the Jira ticket summarizing the implementation approach. Wait for approval from another team member before proceeding.
+5. **Implement changes**, committing as you go
+6. **Push commits** before creating the PR:
+   ```bash
+   git push origin <branch>
+   ```
+7. **Create PR** via `mcp__github__create_pull_request` using the structure from `.github/pull_request_template.md` as the PR body
    - PostToolUse hooks auto-run: Jira → **In Review**, coverage report posted as PR comment
-6. **Read the PR** via `mcp__github__pull_request_read` when addressing review comments
+8. **Read the PR** via `mcp__github__pull_request_read` when addressing review comments
    - PostToolUse hook auto-fetches all inline review comments and PR comments into context
-7. After the user approves and merges via `mcp__github__merge_pull_request`:
+   - Make the requested changes, push them to the branch, then re-request a review from `@DDiggs91`:
+     ```bash
+     git push origin <branch>
+     gh pr edit <number> --add-reviewer DDiggs91
+     ```
+9. After the user approves, **squash merge** via `mcp__github__merge_pull_request` using the PR title and body from the pull request template as the merge commit message
    - PostToolUse hook auto-transitions Jira → **Done**
 
 > Branch naming is critical: hooks extract the Jira key using `[A-Z]+-[0-9]+`.
