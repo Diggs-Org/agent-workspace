@@ -1,3 +1,2 @@
-# Claude Template
-
-A basic template to use for python and Typescript projects
+# agent-workspace
+The tools and configuration used for agentic projects
