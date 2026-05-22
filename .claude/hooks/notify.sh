@@ -2,7 +2,7 @@
 # Handles Notification hook events: desktop notify + log.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/puzzle"
+PROJECT_ROOT="/workspaces/agent-workspace"
 LOG_FILE="$PROJECT_ROOT/.claude/notifications.log"
 
 INPUT=$(cat 2>/dev/null || echo "{}")

@@ -2,7 +2,7 @@
 # PreToolUse hook for Read — silently reindexes a file if its hash is stale.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/puzzle"
+PROJECT_ROOT="/workspaces/agent-workspace"
 INDEX_PATH="$PROJECT_ROOT/.claude/codebase-index.json"
 
 # ── Extract file_path from stdin JSON ─────────────────────────────────────────

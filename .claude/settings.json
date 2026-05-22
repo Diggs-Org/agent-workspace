@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/lint-before-commit.sh"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/lint-before-commit.sh"
           }
         ]
       },
@@ -25,7 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/auto-reindex.sh"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/auto-reindex.sh"
           }
         ]
       }
@@ -36,11 +36,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/jira-transition.sh in_progress"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/jira-transition.sh in_progress"
           },
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/jira-link-branch.sh"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/jira-link-branch.sh"
           }
         ]
       },
@@ -49,11 +49,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/jira-transition.sh in_review"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/jira-transition.sh in_review"
           },
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/post-pr-coverage.sh"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/post-pr-coverage.sh"
           }
         ]
       },
@@ -62,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/jira-transition.sh done"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/jira-transition.sh done"
           }
         ]
       },
@@ -71,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/fetch-pr-comments.sh"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/fetch-pr-comments.sh"
           }
         ]
       }
@@ -82,7 +82,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/session-summary.sh"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/session-summary.sh"
           }
         ]
       }
@@ -93,7 +93,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /workspaces/puzzle/.claude/hooks/notify.sh"
+            "command": "bash /workspaces/agent-workspace/.claude/hooks/notify.sh"
           }
         ]
       }

@@ -2,7 +2,7 @@
 # Appends a brief session summary to .claude/session-summaries.log on Stop.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/puzzle"
+PROJECT_ROOT="/workspaces/agent-workspace"
 SUMMARY_FILE="$PROJECT_ROOT/.claude/session-summaries.log"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
