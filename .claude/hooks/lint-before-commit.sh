@@ -2,7 +2,7 @@
 # Advisory lint check before git commits. Reports errors but does not block.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/puzzle"
+PROJECT_ROOT="/workspaces/agent-workspace"
 REPORT=""
 HAS_ERRORS=false
 

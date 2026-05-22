@@ -4,7 +4,7 @@
 # Never blocks — coverage info is for human review, not a gate.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/puzzle"
+PROJECT_ROOT="/workspaces/agent-workspace"
 cd "$PROJECT_ROOT"
 
 # ── Parse PR info from stdin ──────────────────────────────────────────────────
