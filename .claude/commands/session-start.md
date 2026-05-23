@@ -24,7 +24,7 @@ source project.config
 ## Step 1: Index the Codebase
 
 ```bash
-python3 scripts/index-codebase.py --brief   # file counts, symbols, stale files — <30 lines
+python3 scripts/index-codebase.py --check   # print changed/stale files without rewriting
 ```
 
 ## Finding symbols

@@ -39,6 +39,9 @@ fi
 
 mkdir -p "$LOG_DIR"
 
+# Reset status — a prior busy state may be stale after a container restart
+echo "idle" > "$LOG_DIR/status"
+
 # ── 1. Start cloudflared tunnel ───────────────────────────────────────────────
 if ! command -v cloudflared &>/dev/null; then
   warn "cloudflared not installed — webhook triggering disabled."

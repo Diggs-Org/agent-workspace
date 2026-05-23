@@ -15,6 +15,7 @@ Usage:
     uvicorn scripts.webhook_server:app --host 0.0.0.0 --port 3000
 """
 
+import base64
 import hashlib
 import hmac
 import json
@@ -28,6 +29,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from contextlib import asynccontextmanager
 
 try:
     from fastapi import FastAPI, HTTPException, Request
@@ -77,14 +80,16 @@ def load_config() -> dict[str, str]:
 
 # ── FastAPI app ───────────────────────────────────────────────────────────────
 
-app = FastAPI(title="Claude Webhook Server")
 
-
-@app.on_event("startup")
-def start_background_tasks():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     t = threading.Thread(target=jira_poll_loop, daemon=True)
     t.start()
     log.info("Jira polling thread started (interval: %ds)", JIRA_POLL_INTERVAL)
+    yield
+
+
+app = FastAPI(title="Claude Webhook Server", lifespan=lifespan)
 
 
 @app.get("/health")
@@ -210,7 +215,6 @@ def poll_jira_once(config: dict[str, str]) -> list[str]:
     url = f'{config["ATLASSIAN_URL"]}/rest/api/3/search?jql={encoded_jql}&fields=summary,status&maxResults=20'
 
     credentials = f'{config["ATLASSIAN_EMAIL"]}:{config["ATLASSIAN_API_TOKEN"]}'
-    import base64
     auth = base64.b64encode(credentials.encode()).decode()
 
     req = urllib.request.Request(url, headers={

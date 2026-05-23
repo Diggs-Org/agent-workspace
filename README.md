@@ -173,7 +173,7 @@ curl -X POST http://localhost:3000/webhook/github \
 | `project.config` | Non-secret project metadata (Jira key, emails, GitHub reviewer, webhook ID) |
 | `scripts/setup-project.sh` | One-time setup wizard — run after cloning |
 | `scripts/start-session.sh` | Startup orchestrator (tunnel + webhook server + tmux) |
-| `scripts/webhook-server.py` | FastAPI webhook server + Jira polling thread |
+| `scripts/webhook_server.py` | FastAPI webhook server + Jira polling thread |
 | `scripts/install-cloudflared.sh` | Installs cloudflared for public tunnel |
 | `scripts/check-inbox.sh` | Manual Jira inbox check (debug/verification tool) |
 | `.claude/commands/autonomous-ticket.md` | `/autonomous-ticket` skill — state-machine ticket handler |
