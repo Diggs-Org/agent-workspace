@@ -10,7 +10,7 @@ if [ -z "$TARGET_STATE" ]; then
 fi
 
 # Primary: extract issue key from current branch (e.g. PROJECT-123/short-description)
-BRANCH=$(git -C /workspaces/agent-workspace rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 ISSUE_KEY=$(echo "$BRANCH" | grep -oE '[A-Z]+-[0-9]+' | head -1)
 
 # Fallback: parse stdin (PostToolUse tool_response may contain branch name)

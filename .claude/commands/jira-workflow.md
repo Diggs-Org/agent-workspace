@@ -1,13 +1,20 @@
 # Jira Workflow
 
+> **Note:** Project-specific values (email, reviewer, URLs) come from `project.config` at the
+> repo root. Always `source project.config` before using the values below.
+> For autonomous ticket handling, use `/autonomous-ticket` instead of this manual workflow.
+
 ## Environment Variables
 
-| Variable              | Value                           |
-| --------------------- | ------------------------------- |
-| `ATLASSIAN_URL`       | `https://ddiggs.atlassian.net`  |
-| `ATLASSIAN_EMAIL`     | `claude.danielsdiggs@gmail.com` |
-| `ATLASSIAN_API_TOKEN` | set in devcontainer             |
-| `GITHUB_TOKEN`        | set in devcontainer             |
+| Variable              | Source                                            |
+| --------------------- | ------------------------------------------------- |
+| `ATLASSIAN_URL`       | `project.config` → also set in devcontainer env  |
+| `ATLASSIAN_EMAIL`     | Local shell env (the email Claude uses for Jira)  |
+| `ATLASSIAN_API_TOKEN` | Local shell env (Jira API token)                  |
+| `GITHUB_TOKEN`        | Local shell env                                   |
+| `JIRA_ASSIGNEE_EMAIL` | `project.config`                                  |
+| `JIRA_PROJECT_KEY`    | `project.config`                                  |
+| `GITHUB_REVIEWER`     | `project.config`                                  |
 
 ## Custom Fields
 
@@ -23,16 +30,16 @@ assignee,issuetype,updated,summary,reporter,description,created,labels,priority,
 
 The default field list and `*all` mode both omit this field — it must be requested explicitly.
 
-## Working a Ticket
+## Manual Workflow (for interactive sessions)
 
-When asked to "work a ticket":
+When asked to "work a ticket" manually:
 
-1. **Get assigned tickets** — use the Atlassian MCP to list tickets assigned to `claude.danielsdiggs@gmail.com`
+1. **Get assigned tickets** — use the Atlassian MCP to list tickets assigned to `${JIRA_ASSIGNEE_EMAIL}`
 2. **Pick the highest-priority unresolved ticket** — fetch it via `jira_get_issue` with `fields` including `customfield_10072` so you have the acceptance criteria from the start
 3. **Create branch** via `mcp__github__create_branch` using the naming convention:
    `PROJECT-123/short-description` (Jira key _must_ be the branch prefix)
    - PostToolUse hooks auto-run: Jira → **In Progress**, comment + remote link posted to Jira issue
-4. **Submit a brief plan** — post a comment on the Jira ticket summarizing the implementation approach. Wait for approval from another team member before proceeding.
+4. **Submit a plan** — commit `PLAN.md` to the branch and open a draft PR titled `[PLAN] TICKET-KEY: Summary`. Wait for an approving review before implementing. See the Autonomous Mode section below.
 5. **Implement changes**, committing as you go
 6. **Verify everything is committed and pushed** before creating the PR:
    ```bash
@@ -46,16 +53,28 @@ When asked to "work a ticket":
    - PostToolUse hooks auto-run: Jira → **In Review**, coverage report posted as PR comment
 9. **Read the PR** via `mcp__github__pull_request_read` when addressing review comments
    - PostToolUse hook auto-fetches all inline review comments and PR comments into context
-   - Make the requested changes, push them to the branch, then re-request a review from `@DDiggs91`:
+   - Make the requested changes, push them to the branch, then re-request a review:
      ```bash
      git push origin <branch>
-     gh pr edit <number> --add-reviewer DDiggs91
+     gh pr edit <number> --add-reviewer ${GITHUB_REVIEWER}
      ```
 10. After the user approves, **squash merge** via `mcp__github__merge_pull_request` using the PR title and body from the pull request template as the merge commit message
     - PostToolUse hook auto-transitions Jira → **Done**
 
 > Branch naming is critical: hooks extract the Jira key using `[A-Z]+-[0-9]+`.
 > The branch must start with the Jira key (e.g. `PROJECT-123/...`).
+
+## Autonomous Mode
+
+The `/autonomous-ticket` skill handles this workflow automatically, including state detection
+(determining the current phase from Jira + GitHub state) and executing the right phase.
+
+State machine:
+- **No branch** → Phase 1: create PLAN.md + open draft PR
+- **Draft PR, no approval** → waiting for plan review (report status, end session)
+- **Draft PR, approved** → Phase 2: implement + convert to non-draft
+- **Non-draft PR, changes requested** → Phase 3: address all review comments
+- **Non-draft PR, approved** → Phase 4: squash merge
 
 ## Hooks Reference
 
@@ -84,8 +103,9 @@ Once connected, any branch/commit/PR referencing a Jira issue key is automatical
 If auto-transitions don't fire, verify transition names match your board's workflow:
 
 ```bash
+source project.config
 curl -s -u "$ATLASSIAN_EMAIL:$ATLASSIAN_API_TOKEN" \
-  "$ATLASSIAN_URL/rest/api/3/issue/PROJECT-1/transitions" | python3 -m json.tool
+  "$ATLASSIAN_URL/rest/api/3/issue/${JIRA_PROJECT_KEY}-1/transitions" | python3 -m json.tool
 ```
 
 Adjust the `PATTERN` strings in `.claude/hooks/jira-transition.sh`.

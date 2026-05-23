@@ -4,7 +4,7 @@
 # Never blocks — coverage info is for human review, not a gate.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/agent-workspace"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$PROJECT_ROOT"
 
 # ── Parse PR info from stdin ──────────────────────────────────────────────────

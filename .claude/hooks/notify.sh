@@ -2,7 +2,7 @@
 # Handles Notification hook events: desktop notify + log.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/agent-workspace"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 LOG_FILE="$PROJECT_ROOT/.claude/notifications.log"
 
 INPUT=$(cat 2>/dev/null || echo "{}")

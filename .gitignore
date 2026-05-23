@@ -366,3 +366,9 @@ vite.config.ts.timestamp-*
 .claude/codebase-index.json
 .claude/session-summaries.log
 .claude/notifications.log
+# Webhook server runtime state
+.claude/webhook-config.json
+.claude/inbox.md
+.claude/status
+.claude/seen-tickets.json
+.claude/event-log.json
