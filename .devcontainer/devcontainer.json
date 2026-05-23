@@ -19,8 +19,6 @@
     "ATLASSIAN_API_TOKEN": "${localEnv:ATLASSIAN_API_TOKEN}",
     "ATLASSIAN_BASIC_AUTH": "${localEnv:ATLASSIAN_BASIC_AUTH}",
     "ATLASSIAN_URL": "${localEnv:ATLASSIAN_URL}",
-    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
-    "GITHUB_WEBHOOK_SECRET": "${localEnv:GITHUB_WEBHOOK_SECRET}"
   },
   "customizations": {
     "vscode": {
@@ -33,6 +31,5 @@
     }
   },
 
-  "postCreateCommand": "npm ci && pip install uv fastapi uvicorn httpx && chmod +x scripts/*.sh .claude/hooks/*.sh && sudo bash scripts/install-cloudflared.sh",
-  "postStartCommand": "bash scripts/start-session.sh"
+  "postCreateCommand": "sudo apt-get install -y tmux && npm ci && pip install uv && chmod +x scripts/*.sh .claude/hooks/*.sh"
 }
