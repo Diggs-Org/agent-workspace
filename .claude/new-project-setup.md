@@ -17,6 +17,7 @@ find .claude -type f | xargs sed -i 's|/workspaces/agent-workspace|/workspaces/y
 ```
 
 Files that contain this path:
+
 - `.claude/settings.json` — all `"command"` values (10 occurrences)
 - `.claude/hooks/auto-reindex.sh` — `PROJECT_ROOT`
 - `.claude/hooks/lint-before-commit.sh` — `PROJECT_ROOT`
@@ -32,13 +33,13 @@ Files that contain this path:
 
 Update `.claude/commands/jira-workflow.md`:
 
-| Item | Where | What to change |
-|------|-------|---------------|
-| Jira project key | Step 3 example `PROJECT-123` | Replace with your actual project key (e.g. `MYPROJ-123`) |
-| Agent email | Step 1 `claude.danielsdiggs@gmail.com` | Email used by Claude for Jira API calls |
-| Reviewer username | Step 9 `--add-reviewer DDiggs91` | Your team's GitHub username |
-| Atlassian URL | `## Environment Variables` table | Your org's Atlassian URL |
-| Transition troubleshooting example | `PROJECT-1` in curl command | Any real issue key from your project |
+| Item                               | Where                                  | What to change                                           |
+| ---------------------------------- | -------------------------------------- | -------------------------------------------------------- |
+| Jira project key                   | Step 3 example `PROJECT-123`           | Replace with your actual project key (e.g. `MYPROJ-123`) |
+| Agent email                        | Step 1 `claude.danielsdiggs@gmail.com` | Email used by Claude for Jira API calls                  |
+| Reviewer username                  | Step 9 `--add-reviewer DDiggs91`       | Your team's GitHub username                              |
+| Atlassian URL                      | `## Environment Variables` table       | Your org's Atlassian URL                                 |
+| Transition troubleshooting example | `PROJECT-1` in curl command            | Any real issue key from your project                     |
 
 If your Jira board uses different workflow state names (e.g. `Backlog` instead of `To Do`), update the `PATTERN` strings in `.claude/hooks/jira-transition.sh`. Validate with:
 
@@ -61,15 +62,16 @@ curl -s -u "$ATLASSIAN_EMAIL:$ATLASSIAN_API_TOKEN" \
 
 Set these in your devcontainer before the first session:
 
-| Variable | Description |
-|----------|-------------|
-| `ATLASSIAN_URL` | Your Atlassian instance (e.g. `https://your-org.atlassian.net`) |
-| `ATLASSIAN_EMAIL` | Email Claude uses for Jira API calls |
-| `ATLASSIAN_API_TOKEN` | Atlassian API token for that email |
-| `ATLASSIAN_BASIC_AUTH` | `base64(email:api_token)` — used directly in hook `curl` calls |
-| `GITHUB_TOKEN` | GitHub PAT with `repo` + `pull_requests` + `read:org` scopes |
+| Variable               | Description                                                     |
+| ---------------------- | --------------------------------------------------------------- |
+| `ATLASSIAN_URL`        | Your Atlassian instance (e.g. `https://your-org.atlassian.net`) |
+| `ATLASSIAN_EMAIL`      | Email Claude uses for Jira API calls                            |
+| `ATLASSIAN_API_TOKEN`  | Atlassian API token for that email                              |
+| `ATLASSIAN_BASIC_AUTH` | `base64(email:api_token)` — used directly in hook `curl` calls  |
+| `GITHUB_TOKEN`         | GitHub PAT with `repo` + `pull_requests` + `read:org` scopes    |
 
 Generate `ATLASSIAN_BASIC_AUTH`:
+
 ```bash
 echo -n "your-email@example.com:your-api-token" | base64
 ```

@@ -9,7 +9,9 @@
     },
     "mcp-atlassian": {
       "command": "uvx",
-      "args": ["mcp-atlassian"],
+      "args": [
+        "mcp-atlassian"
+      ],
       "env": {
         "JIRA_URL": "${ATLASSIAN_URL}",
         "JIRA_USERNAME": "${ATLASSIAN_EMAIL}",

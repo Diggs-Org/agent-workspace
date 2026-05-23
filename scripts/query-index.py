@@ -93,22 +93,28 @@ def filter_symbols(
             rows = substring_hits
         else:
             all_names = [r["name"] for r in rows]
-            close = set(difflib.get_close_matches(symbol, all_names, n=20, cutoff=0.6))
+            close = set(difflib.get_close_matches(
+                symbol, all_names, n=20, cutoff=0.6))
             rows = [r for r in rows if r["name"] in close]
     return rows
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Query the codebase symbol index")
-    parser.add_argument("--symbol", metavar="NAME", help="Fuzzy match symbol name")
+    parser = argparse.ArgumentParser(
+        description="Query the codebase symbol index")
+    parser.add_argument("--symbol", metavar="NAME",
+                        help="Fuzzy match symbol name")
     parser.add_argument(
         "--kind",
         metavar="KINDS",
         help="Comma-separated: function, class, method",
     )
-    parser.add_argument("--file", metavar="GLOB", help="Filter by file path glob")
-    parser.add_argument("--exports", action="store_true", help="Exported symbols only")
-    parser.add_argument("--top", metavar="N", type=int, default=50, help="Max results (default 50)")
+    parser.add_argument("--file", metavar="GLOB",
+                        help="Filter by file path glob")
+    parser.add_argument("--exports", action="store_true",
+                        help="Exported symbols only")
+    parser.add_argument("--top", metavar="N", type=int,
+                        default=50, help="Max results (default 50)")
     args = parser.parse_args()
 
     data = load_index()
