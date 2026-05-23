@@ -17,8 +17,8 @@ When calling `jira_get_issue`, always include `customfield_10072` in the `fields
 assignee,issuetype,updated,summary,reporter,description,created,labels,priority,status,customfield_10072
 ```
 
-| Field name | Field ID |
-|---|---|
+| Field name          | Field ID            |
+| ------------------- | ------------------- |
 | Acceptance Criteria | `customfield_10072` |
 
 The default field list and `*all` mode both omit this field — it must be requested explicitly.

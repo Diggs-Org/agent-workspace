@@ -187,7 +187,8 @@ def _jsdoc_before(source: str, pos: int) -> str | None:
     snippet = source[max(0, pos - 500):pos]
     m = _JSDOC.search(snippet)
     if m:
-        lines = [l.strip().lstrip("* ") for l in m.group(1).strip().splitlines()]
+        lines = [l.strip().lstrip("* ")
+                 for l in m.group(1).strip().splitlines()]
         return " ".join(l for l in lines if l and not l.startswith("@")).strip() or None
     return None
 
@@ -326,10 +327,12 @@ def brief_overview(data: dict) -> None:
                 changed.append(rel)
 
     generated = data.get("generated_at", "unknown")
-    lang_summary = "  ".join(f"{lang}: {n}" for lang, n in sorted(lang_counts.items()))
+    lang_summary = "  ".join(
+        f"{lang}: {n}" for lang, n in sorted(lang_counts.items()))
     print(f"Codebase index  generated: {generated}")
     print(f"Files: {len(files)}  |  {lang_summary}")
-    print(f"Symbols: {total_functions} functions/methods, {total_classes} classes")
+    print(
+        f"Symbols: {total_functions} functions/methods, {total_classes} classes")
     print()
     if changed:
         print(f"Stale ({len(changed)} file(s) need re-index):")
@@ -367,10 +370,14 @@ def save_index(data: dict) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Codebase symbol indexer")
-    parser.add_argument("--full", action="store_true", help="Force full re-index")
-    parser.add_argument("--check", action="store_true", help="Print changed files, no write")
-    parser.add_argument("--file", metavar="PATH", help="Re-index a single file")
-    parser.add_argument("--brief", action="store_true", help="Print compact project overview")
+    parser.add_argument("--full", action="store_true",
+                        help="Force full re-index")
+    parser.add_argument("--check", action="store_true",
+                        help="Print changed files, no write")
+    parser.add_argument("--file", metavar="PATH",
+                        help="Re-index a single file")
+    parser.add_argument("--brief", action="store_true",
+                        help="Print compact project overview")
     args = parser.parse_args()
 
     data = load_index()
