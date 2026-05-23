@@ -115,4 +115,4 @@ Then confirm:
 - [ ] MCP servers connect: run `/session-start` — Jira and GitHub tools should appear
 - [ ] Inbox check works: `bash scripts/check-inbox.sh` runs without errors
 - [ ] Devcontainer startup works: reopen in VS Code, check terminal for `check-inbox:` output
-- [ ] Assign a test Jira ticket to `${JIRA_ASSIGNEE_EMAIL}`, reopen devcontainer, run `/session-start` → Claude should pick up the ticket automatically
+- [ ] Assign a test Jira ticket to `${JIRA_ASSIGNEE_EMAIL}`, wait up to 60s → check `.claude/inbox.md` updated and `tmux capture-pane -t claude-auto:0 -pq | tail -5` shows `/session-start` was triggered automatically

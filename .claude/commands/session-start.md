@@ -4,8 +4,8 @@ Run this at the start of every session to orient and pick up any pending work.
 
 ## Step 0: Check Inbox and Ticket State
 
-Read `.claude/inbox.md` if it exists — it was populated by `scripts/check-inbox.sh` when the
-devcontainer started. If the file is missing or more than 1 hour old, query Jira directly:
+Read `.claude/inbox.md` if it exists — it was populated by the webhook server's Jira polling
+thread when the devcontainer started. If the file is missing or more than 1 hour old, query Jira directly:
 
 ```bash
 source project.config

@@ -175,7 +175,7 @@ curl -X POST http://localhost:3000/webhook/github \
 | `scripts/start-session.sh` | Startup orchestrator (tunnel + webhook server + tmux) |
 | `scripts/webhook-server.py` | FastAPI webhook server + Jira polling thread |
 | `scripts/install-cloudflared.sh` | Installs cloudflared for public tunnel |
-| `scripts/check-inbox.sh` | Manual Jira inbox check (also called by startup) |
+| `scripts/check-inbox.sh` | Manual Jira inbox check (debug/verification tool) |
 | `.claude/commands/autonomous-ticket.md` | `/autonomous-ticket` skill — state-machine ticket handler |
 | `.claude/commands/jira-workflow.md` | `/jira-workflow` skill — manual workflow reference |
 | `.claude/commands/session-start.md` | `/session-start` skill — session orientation + inbox check |
