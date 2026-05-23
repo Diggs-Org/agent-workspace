@@ -3,14 +3,25 @@
 Handles an assigned Jira ticket end-to-end using state detected from Jira and GitHub.
 Read `project.config` at the repo root first to get project-specific values.
 
+## Status File
+
+Write to `.claude/status` at key boundaries so the webhook server knows when Claude is safe
+to interrupt vs. busy. The webhook server will not send `/session-start` while status is `busy`.
+
+```bash
+echo "busy" > .claude/status   # at the start of any active phase
+echo "idle" > .claude/status   # when waiting for a human review (session can end)
+```
+
 ## State Detection
 
-Before doing anything, determine the current phase by checking existing state:
+Before doing anything, mark as busy and determine the current phase:
 
-```
-1. source project.config
-2. Search GitHub for open PRs whose head branch contains the Jira key
-3. Check the Jira ticket status
+```bash
+echo "busy" > .claude/status
+source project.config
+# Search GitHub for open PRs whose head branch contains the Jira key
+# Check the Jira ticket status
 ```
 
 Then execute the matching phase below.
@@ -67,7 +78,9 @@ Then execute the matching phase below.
 
 7. Post a Jira comment summarizing the plan and linking to the draft PR.
 
-8. Tell the user: "Plan is ready for review: [PR URL]. Approve the draft PR on GitHub to begin implementation."
+8. Write idle status: `echo "idle" > .claude/status`
+
+9. Tell the user: "Plan is ready for review: [PR URL]. Approve the draft PR on GitHub to begin implementation. The webhook server will trigger the next session automatically when you approve."
 
 ---
 
@@ -96,7 +109,9 @@ How to detect: use `mcp__github__pull_request_read` on the draft PR, then check 
    The PostToolUse `create_pull_request` hook transitions Jira → In Review and posts coverage.
    If using `gh pr ready` instead, manually transition: the hook only fires on `mcp__github__create_pull_request`.
 
-6. Tell the user: "Implementation complete. PR is ready for code review: [PR URL]."
+6. Write idle status: `echo "idle" > .claude/status`
+
+7. Tell the user: "Implementation complete. PR is ready for code review: [PR URL]. The webhook server will trigger the next session automatically when a review is submitted."
 
 ---
 
@@ -119,7 +134,9 @@ How to detect: use `mcp__github__pull_request_read` on the draft PR, then check 
    gh pr edit <number> --add-reviewer ${GITHUB_REVIEWER}
    ```
 
-5. Tell the user: "All review comments addressed. Re-requested review from @${GITHUB_REVIEWER}."
+5. Write idle status: `echo "idle" > .claude/status`
+
+6. Tell the user: "All review comments addressed. Re-requested review from @${GITHUB_REVIEWER}. The webhook server will trigger the next session when the reviewer responds."
 
 ---
 
@@ -133,7 +150,9 @@ How to detect: use `mcp__github__pull_request_read` on the draft PR, then check 
    - Commit message: PR title and body (from the pull request template)
    - The PostToolUse hook transitions Jira → Done automatically
 
-2. Tell the user: "PR merged. Jira ticket closed. Work complete."
+2. Write idle status: `echo "idle" > .claude/status`
+
+3. Tell the user: "PR merged. Jira ticket closed. Work complete."
 
 ---
 
