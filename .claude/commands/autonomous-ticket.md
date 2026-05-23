@@ -16,11 +16,13 @@ Fetch the ticket, explore the codebase, create a plan, and open a draft PR.
 
 Detects the current phase from the active git branch → open PR → review state, then runs
 the appropriate phase:
+
 - Draft PR with approving review → **Phase 2** (implement)
 - Non-draft PR with changes requested → **Phase 3** (address comments)
 - Non-draft PR with approval → **Phase 4** (merge)
 
 To detect state:
+
 ```bash
 git branch --show-current   # extract Jira key from branch name
 # then use mcp__github__pull_request_read to check PR draft status and review state
@@ -43,24 +45,30 @@ git branch --show-current   # extract Jira key from branch name
    - One agent: check for related utilities, schemas, or config that would be touched
 
 3. **Create `PLAN.md`** with the following structure:
+
    ```markdown
    # Plan: [TICKET-KEY]: [Summary]
 
    ## What & Why
+
    [One paragraph: what needs to change and why, in terms of the acceptance criteria]
 
    ## Approach
+
    [Numbered steps describing the implementation. Be specific: file paths, function names,
    schema changes, API changes. Include sub-agent strategy if the implementation is large.]
 
    ## Files to Change
+
    - `path/to/file.py` — what changes and why
    - (list all files that will be touched)
 
    ## Acceptance Criteria Checklist
+
    - [ ] [Each criterion from customfield_10072, reworded as a verifiable statement]
 
    ## Out of Scope
+
    [Anything explicitly NOT being done in this ticket]
    ```
 
@@ -98,11 +106,13 @@ How to detect: use `mcp__github__pull_request_read` on the draft PR, then check 
    Do NOT remove `PLAN.md` — it stays as implementation context.
 
    Before proceeding to step 4, verify everything is committed and pushed:
+
    ```bash
    git status          # must show "nothing to commit, working tree clean"
    git push origin <branch>
    git status          # must show "Your branch is up to date with 'origin/<branch>'"
    ```
+
    Do not proceed if there are uncommitted changes or unpushed commits.
 
 4. For each criterion in the `customfield_10072` acceptance criteria field fetched in Phase 1,
@@ -110,9 +120,11 @@ How to detect: use `mcp__github__pull_request_read` on the draft PR, then check 
    missing changes, commit, push, and re-verify. Only proceed once every criterion is satisfied.
 
 5. **Convert the draft PR to non-draft**:
+
    ```bash
    gh pr ready <pr-number>
    ```
+
    If using `gh pr ready`, manually transition Jira → In Review (the hook only fires on
    `mcp__github__create_pull_request`, not on `gh pr ready`).
 
@@ -135,6 +147,7 @@ How to detect: use `mcp__github__pull_request_read` on the draft PR, then check 
 3. Push all changes to the branch.
 
 4. Re-request review from `${GITHUB_REVIEWER}`:
+
    ```bash
    gh pr edit <number> --add-reviewer ${GITHUB_REVIEWER}
    ```
@@ -183,8 +196,10 @@ These PostToolUse hooks run without any action required:
 | Notification | any                                | `notify.sh`                      | Desktop notify + `.claude/notifications.log`            |
 
 If Jira transitions don't fire, verify transition names match your board:
+
 ```bash
 curl -s -u "$ATLASSIAN_EMAIL:$ATLASSIAN_API_TOKEN" \
   "$ATLASSIAN_URL/rest/api/3/issue/${JIRA_PROJECT_KEY}-1/transitions" | python3 -m json.tool
 ```
+
 Adjust the `PATTERN` strings in `.claude/hooks/jira-transition.sh`.
