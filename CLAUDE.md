@@ -1,8 +1,12 @@
 # Claude Code Instructions
 
-## Jira Workflow
+## Ticket Workflow
 
-Use `/jira-workflow` for the full workflow reference.
+Two phrases drive the full end-to-end workflow:
+- **"You have been assigned ticket [KEY]"** — fetches the ticket, explores the codebase, creates PLAN.md, opens a draft PR (Phase 1)
+- **"A PR review has been performed"** — detects current state and runs the appropriate phase (implement / address comments / merge)
+
+Use `/autonomous-ticket` to see the full skill definition.
 
 ## Codebase Navigation
 
