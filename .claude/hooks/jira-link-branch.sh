@@ -21,7 +21,7 @@ except Exception:
 " 2>/dev/null || echo "")
 
 if [ -z "$BRANCH" ]; then
-    BRANCH=$(git -C /workspaces/agent-workspace rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+    BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 fi
 
 ISSUE_KEY=$(echo "$BRANCH" | grep -oE '[A-Z]+-[0-9]+' | head -1 || echo "")
@@ -32,7 +32,7 @@ if [ -z "$ISSUE_KEY" ]; then
 fi
 
 # ── Build branch URL from git remote ─────────────────────────────────────────
-REMOTE_URL=$(git -C /workspaces/agent-workspace remote get-url origin 2>/dev/null || echo "")
+REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
 REPO_HTTP=$(echo "$REMOTE_URL" | python3 -c "
 import sys, re
 url = sys.stdin.read().strip()

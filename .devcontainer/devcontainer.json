@@ -14,12 +14,13 @@
 
   },
   "containerEnv": {
-  "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
-  "ATLASSIAN_EMAIL": "${localEnv:ATLASSIAN_EMAIL}",
-  "ATLASSIAN_API_TOKEN": "${localEnv:ATLASSIAN_API_TOKEN}",
-  "ATLASSIAN_BASIC_AUTH": "${localEnv:ATLASSIAN_BASIC_AUTH}",
-  "ATLASSIAN_URL": "${localEnv:ATLASSIAN_URL}"
-},
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "ATLASSIAN_EMAIL": "${localEnv:ATLASSIAN_EMAIL}",
+    "ATLASSIAN_API_TOKEN": "${localEnv:ATLASSIAN_API_TOKEN}",
+    "ATLASSIAN_BASIC_AUTH": "${localEnv:ATLASSIAN_BASIC_AUTH}",
+    "ATLASSIAN_URL": "${localEnv:ATLASSIAN_URL}",
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -31,5 +32,6 @@
     }
   },
 
-  "postCreateCommand": "npm ci && pip install uv"
+  "postCreateCommand": "npm ci && pip install uv && chmod +x scripts/*.sh .claude/hooks/*.sh",
+  "postStartCommand": "bash scripts/check-inbox.sh"
 }

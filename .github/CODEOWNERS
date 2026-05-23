@@ -1,2 +1,4 @@
-# All files require review from DDiggs91
-* @DDiggs91
+# All files require review from the project owner.
+# Replace @GITHUB_REVIEWER_PLACEHOLDER with your GitHub username.
+# Also set GITHUB_REVIEWER in project.config — run scripts/setup-project.sh.
+* @GITHUB_REVIEWER_PLACEHOLDER

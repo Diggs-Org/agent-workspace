@@ -2,7 +2,7 @@
 # Advisory lint check before git commits. Reports errors but does not block.
 set -euo pipefail
 
-PROJECT_ROOT="/workspaces/agent-workspace"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 REPORT=""
 HAS_ERRORS=false
 
